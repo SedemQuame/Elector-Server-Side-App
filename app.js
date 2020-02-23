@@ -1,4 +1,4 @@
-// jshint esversion: 6
+// jshint esversion: 8
 require('dotenv').config();
 
 //========================================= requiring modules ========================================//
@@ -14,10 +14,13 @@ mongoose.Promise = global.Promise;
 
 const connectDB = async () => {
 mongoose.connect(db.url, db.options);
-console.log('DB Connected....');
 };
 
-connectDB();
+connectDB().then(() => {
+    console.log('DB Connected....');
+}).catch(() => {
+    console.log('DB Not Connected....');
+});
 
 //creating app
 const app = express();

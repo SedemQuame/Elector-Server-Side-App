@@ -14,7 +14,6 @@ const electionSchema = mongoose.Schema({
         name: String,
         voteCount: {type: Number, default: 0},
     }],
-    totalVotes: { type: Number, min: 0, default: 0},
 });
 
 

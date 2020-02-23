@@ -10,14 +10,18 @@ const election = require('../models/election.model');
 
 //================================== creating HTTP handler methods ==================================//
 function processCandidateData(strObj) {
+    console.log(strObj);
+    
     const words = strObj.split(',');
+    console.log(words);
     let newArr = [];
     for(let i =0; i < words.length; i++){
-        let newVar = words[i] + "," + words[i+1];
+        let newVar = words[i] + ', ' + words[i+1];
         newArr.push(JSON.parse(newVar));
+        console.log(newVar);
   	    i++;
     }
-    // console.log(newArr);
+    console.log(newArr);
     return newArr;
 }
 
@@ -28,7 +32,7 @@ exports.createElection = (req, res) => {
         description:req.query.electionDescription || null,
         start_time :req.query.electionStartTime || null,
         end_time:req.query.electionEndTime || null,
-        candidates: processCandidateData(req.query.electionCandidates)
+        candidates: processCandidateData(req.query.electionCandidates) || null
     }).then(() => {
         res.send({msg: `Election creation successful 😎😎`});
     }).catch((err) => {
@@ -39,6 +43,17 @@ exports.createElection = (req, res) => {
 
 // get current vote results
 exports.getElectionResult = (req, res) => {
+    election.find({}, (err, election) => {
+        if(err){
+            res.send({msg: `Can't get election results. Please try again in a minute.`});
+        }else{
+            res.send({result: election});
+        }
+    });
+};
+
+// get current vote results
+exports.getElectionResultById = (req, res) => {
     election.findById(req.query.electionId, (err, election) => {
         if(err){
             res.send({msg: `Can't get election results. Please try again in a minute.`});
