@@ -43,11 +43,11 @@ exports.createElection = (req, res) => {
 
 // get current vote results
 exports.getElectionResult = (req, res) => {
-    election.find({}, (err, election) => {
+    election.find({}, (err, electionResults) => {
         if(err){
             res.send({msg: `Can't get election results. Please try again in a minute.`});
         }else{
-            res.send({result: election});
+            res.send(electionResults);
         }
     });
 };

@@ -22,4 +22,23 @@ module.exports = app => {
 
     // updating election results
     app.route('/update_election').post(election.updateResults);
+
+    
+    // election creation route
+    app.route('/create_election').get(election.createElection);    
+
+    // get election result
+    app.route('/get_election').get(election.getElectionResult);
+
+    // get election result by id
+    app.route('/get_election_by_id').get(election.getElectionResultById);
+
+    // delete current election
+    app.route('/remove_election').get(election.removeElection);
+
+    // delete all the current election
+    app.route('/remove_all_elections').get(election.removeAllElection);
+
+    // updating election results
+    app.route('/update_election').get(election.updateResults);
 };
