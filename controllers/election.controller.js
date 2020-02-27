@@ -47,7 +47,7 @@ exports.getElectionResult = (req, res) => {
         if(err){
             res.send({msg: `Can't get election results. Please try again in a minute.`});
         }else{
-            res.send(electionResults);
+            res.send({results: electionResults});
         }
     });
 };
