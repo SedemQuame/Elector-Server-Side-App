@@ -6,10 +6,4 @@ module.exports = app => {
     //========================================== app users routes ============================================//
     app.route('/user_login')
         .post(user.login);
-
-    
-    // user signup route
-    app.route('/user_signup')
-        .post(user.createUser);
-
 };

@@ -1,0 +1,28 @@
+<%- include('partials/header.ejs'); %>
+
+    <body class="bodyBg">
+        <%- include('partials/nav1.ejs'); %>
+            <h2 id="adminLoginText" class="text-center">Admin Login</h2>
+            <div id="loginBG" class="container">
+                <div class="col-12 offset-md-3 col-md-6 offset-md-3 offset-lg-4 col-lg-4 offset-lg-4">
+                </div>
+
+                <div class="col-12 offset-md-3 col-md-6 offset-md-3 offset-lg-4 col-lg-4 offset-lg-4">
+                    <form action="/user_login" method="post">
+                        <div class="form-group">
+                            <label for="uname"><b>Email Address</b></label>
+                            <input class="form-control" type="text" placeholder="Admin Email Address" name="email_address" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="desc"><b>Password</b></label>
+                            <input class="form-control" type="password" placeholder="Admin Password" name="password" required>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-dark btn-block" type="submit">Submit</button>
+                            <label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <%- include('partials/footer.ejs'); %>

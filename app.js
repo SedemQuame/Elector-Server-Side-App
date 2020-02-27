@@ -5,6 +5,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const fileupload = require('express-fileupload');
 
 // custom user modules
 const db = require('./config/db.config');
@@ -25,9 +26,17 @@ connectDB().then(() => {
 //creating app
 const app = express();
 
+// parse requests of content-type - application/x-www-form-urlencoded
+
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+// app.use(bodyParser.urlencoded({extended: false}));
+app.use(fileupload(), bodyParser.urlencoded({ extended: true }));
+
+
+
+// serving static files in express
+app.use(express.static(__dirname + '/public'));
 
 
 //====================================== requiring list routes ========================================//
@@ -36,7 +45,7 @@ require('./routes/election.route')(app);
 
 // define a simple route
 app.get('/', (req, res) => {
-    res.send({msg: `Welcome to the elector app`});
+    res.redirect('/login');
 });
 
 // listening port

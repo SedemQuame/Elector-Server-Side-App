@@ -8,6 +8,7 @@ const electionSchema = mongoose.Schema({
     // election information
     name: String,
     description: String,
+    image_url: String,
     start_time : String,
     end_time: String,
     candidates: [{

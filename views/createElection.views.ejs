@@ -1,0 +1,68 @@
+<%- include('partials/header.ejs'); %>
+
+    <body>
+        <%- include('partials/nav.ejs'); %>
+            <h2 class="text-center">Create Election</h2>
+            <div class="container">
+                <div class="imgContainer col-12 offset-md-3 col-md-6 offset-md-3 offset-lg-4 col-lg-4 offset-lg-4">
+                    <img src="./img/boy.svg" alt="Avatar">
+                </div>
+
+                <div class="col-12 offset-md-3 col-md-6 offset-md-3 offset-lg-4 col-lg-4 offset-lg-4">
+                    <p class="text-center">
+                        Create a new, election as the admin,
+                        <br> to provision android application with data.
+                    </p>
+                </div>
+
+                <div class="col-12 offset-md-2 col-md-8 offset-md-2 offset-lg-3 col-lg-6 offset-lg-3">
+                    <form action="/create_election" method="POST" enctype="multipart/form-data">
+                        <h2 class="text-center">Election MetaData</h2>
+                        <hr>
+                        <div class="form-group">
+                            <label for="uname"><b>Election name</b></label>
+                            <input class="form-control" type="text" placeholder="Enter election name" name="electionName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="desc"><b>Election description</b></label>
+                            <input class="form-control" type="text" placeholder="Description of election" name="electionDescription" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="start_time"><b>Start time</b></label>
+                            <input class="form-control" type="date" placeholder="select time" name="electionStartTime" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="end_time"><b>End time </b></label>
+                            <input class="form-control" type="date" placeholder="select time" name="electionEndTime" required>
+                        </div>
+
+                        <h2 class="text-center">Candidates MetaData</h2>
+                        <hr>
+                        <div class="form-group">
+                            <label for="candidate"><b>Candidate #1</b></label>
+                            <input class="form-control" type="text" placeholder="Candidate Name" name="candidateOne" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="candidate"><b>Candidate #2</b></label>
+                            <input class="form-control" type="text" placeholder="Candidate Name" name="candidateTwo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="candidate"><b>Candidate #3</b></label>
+                            <input class="form-control" type="text" placeholder="Candidate Name" name="candidateThree" required>
+                        </div>
+
+                        <h2 class="text-center">Election Poster</h2>
+                        <hr>
+
+                        <div class="form-group">
+                            <input class="form-control" type="file" name="electionPoster">
+                        </div>
+
+                        <div class="form-group">
+                            <input class="btn btn-dark btn-block" type="submit" value="Submit">
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <%- include('partials/footer.ejs'); %>
