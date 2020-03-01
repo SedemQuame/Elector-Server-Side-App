@@ -37,6 +37,23 @@ function processCandidateData(strObj) {
     return newArr;
 }
 
+function processCandidatesData(candidate1, candidate2, candidate3){
+    let newStr = '[';
+    let jsonStructure = `{"name": "${candidate1}", "vote": ${0}},`;
+    let jsonStructure2 = `{"name": "${candidate2}", "vote": ${0}},`;
+    let jsonStructure3 = `{"name": "${candidate3}", "vote": ${0}}`;
+
+    newStr += jsonStructure;
+    newStr += jsonStructure2; 
+
+    if(candidate3 != ""){
+        newStr += jsonStructure3;
+    }
+
+    newStr += ']';
+    return JSON.parse(newStr);
+}
+
 
 // create new election
 exports.createElection = (req, res) => {
@@ -66,7 +83,7 @@ exports.createElection = (req, res) => {
                 image_url: image.url||null,
                 start_time :req.body.electionStartTime || null,
                 end_time:req.body.electionEndTime || null,
-                // candidates: processCandidatesData(req.query.candidateOne, req.query.candidateTwo, req.query.candidateThree) || null
+                candidates: processCandidatesData(req.body.candidateOne, req.body.candidateTwo, req.body.candidateThree) || null
             }).then(() => {
                 // res.send({msg: `Election creation successful 😎😎`});
                 res.redirect('/creatorPage');
@@ -108,22 +125,16 @@ exports.updateResults = (req, res) => {
        if(err){
         res.send({msg: `Unable to update, election.`});
        }else{
-        // iterating through the docs.
-        // console.log(docs.candidates);
-
-        let newCount;
-        
+        //    res.send({candidates: docs["candidates"]});
+//         let newCount;
         docs.candidates.forEach(element => {
-            // console.log(element);
-            console.log(req.query.candidateId);
-            // console.log(element._id);
             if(req.query.candidateId == element._id){
                 // console.log("condition fulfilled");
                 newCount = parseInt(JSON.stringify(element.voteCount)) + 1;
                 element.voteCount = newCount;
                 docs.save()
                     .then(() => {
-                        console.log("New count for candidate with id: " + JSON.stringify(req.query.candidateId) + " is " + newCount);
+                        // console.log("New count for candidate with id: " + JSON.stringify(req.query.candidateId) + " is " + newCount);
                         res.send({msg: `Object updated.`});
                     }).catch(() => {
                         res.send({msg: `Object could not be updated.`});
@@ -136,12 +147,12 @@ exports.updateResults = (req, res) => {
 };
 
 // remove current Election
-exports.removeElection = (req, res) => {
-    election.findByIdAndRemove(req.query.electionId, (err, result) => {
+exports.removeElectionById = (req, res) => {
+    election.findByIdAndRemove(req.body.electionId, (err, result) => {
         if(err){
-            res.send({msg: `Error occurered whilst, removing election.`});
+            res.redirect('/homeWithError');
         }else{
-            res.send({msg: `Election of id: ${req.query.electionId} was removed.`});
+            res.redirect('/home');
         }
     });
 };
@@ -161,3 +172,13 @@ exports.removeAllElection = (req, res) => {
             });
 };
 
+exports.routeToHome = (req, res) => {
+    election.find({}, (err, electionResults) => {
+        if(err){
+            res.send({msg: `Can't get election results. Please try again in a minute.`});
+        }else{
+            // res.send({results: electionResults});
+        res.render(__dirname + './../views/home.views.ejs', {results: electionResults});
+}
+    });
+};

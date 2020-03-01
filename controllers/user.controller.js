@@ -13,10 +13,7 @@ const SALT_ROUNDS = 12;
 
 //================================== creating HTTP handler methods ==================================//
 // user authentication and logging
-exports.login = (req, res) => {
-    console.log(req.body.password);
-    console.log(req.body.email_address);
-    
+exports.login = (req, res) => {   
     if(req.body.password != null && req.body.email_address != null){
         if(req.body.email_address == `sedem.amekpewu.3@gmail.com` && req.body.password == `qwerty`){
             res.redirect('/home');

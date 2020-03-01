@@ -3,5 +3,61 @@
     <body>
         <%- include('partials/nav.ejs'); %>
 
+            <div class="container">
+                <h1>Election List</h1>
+                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis
+                    aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                <hr>
+                <!-- <%= results %> -->
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Poster</th>
+                            <th scope="col">Election</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Start</th>
+                            <th scope="col">End</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%for(let i = 0; i < results.length; i++){%>
+                            <tr>
+                                <th scope="row">
+                                    <!-- <%= (i+1) %> -->
+                                    <img class="homeElectionImgs" src="<%= results[i].image_url %>" alt="electionPoster">
+                                </th>
+                                <td>
+                                    <%= results[i].name %>
+                                </td>
+                                <td>
+                                    <%=  results[i].description %>
+                                </td>
+                                <td>
+                                    <%=  results[i].start_time %>
+                                </td>
+                                <td>
+                                    <%=  results[i].end_time %>
+                                </td>
+                                <td>
+                                    <%=  'active' %>
+                                </td>
+                                <td>
+
+                                    <form action="/remove_election_by_id" method="post">
+                                        <input type="hidden" name="electionId" value="<%=  results[i]._id %>">
+
+                                        <button type="submit">
+                                            <img class="deleteBtn" src="./img/delete.svg" alt="Delete icon">
+                                        </button>
+                                    </form>
+
+                                </td>
+                            </tr>
+                            <%}%>
+                    </tbody>
+                </table>
+            </div>
 
             <%- include('partials/footer.ejs'); %>
