@@ -33,6 +33,9 @@ module.exports = app => {
     // delete current election
     app.route('/remove_election_by_id').post(election.removeElectionById);
 
+    // publish current election
+    app.route('/publish_election_by_id').post(election.publishElectionById);
+
     // delete all the current election
     app.route('/remove_all_elections').get(election.removeAllElection);
 

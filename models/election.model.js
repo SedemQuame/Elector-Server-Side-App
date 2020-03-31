@@ -11,9 +11,11 @@ const electionSchema = mongoose.Schema({
     image_url: String,
     start_time : String,
     end_time: String,
+    status: {type: String, default: "Ongoing"},
     candidates: [{
         name: String,
         voteCount: {type: Number, default: 0},
+        candidateImg: String,
     }],
 });
 

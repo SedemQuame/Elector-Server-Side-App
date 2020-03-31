@@ -18,6 +18,7 @@
                             <th scope="col">Start</th>
                             <th scope="col">End</th>
                             <th scope="col">Status</th>
+                            <th scope="col">Publish</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
@@ -45,10 +46,19 @@
                                 </td>
                                 <td>
 
+                                    <form action="/publish_election_by_id" method="post">
+                                        <input type="hidden" name="electionId" value="<%=  results[i]._id %>">
+                                        <button class="btn btn-sm" type="submit">
+                                            <img class="deleteBtn" src="./img/eye.svg" alt="Delete icon">
+                                        </button>
+                                    </form>
+
+                                </td>
+                                <td>
+
                                     <form action="/remove_election_by_id" method="post">
                                         <input type="hidden" name="electionId" value="<%=  results[i]._id %>">
-
-                                        <button type="submit">
+                                        <button class="btn btn-sm" type="submit">
                                             <img class="deleteBtn" src="./img/delete.svg" alt="Delete icon">
                                         </button>
                                     </form>
