@@ -3,9 +3,11 @@ require('dotenv').config({ path: __dirname + './../.env' });
 
 //====================================== requiring modules ===========================================//
 // node modules
-
+const CryptoJS = require('crypto-js');
 const fs = require('fs');
 const cloudinary = require('cloudinary').v2;
+const secretPhrase = 'hdgfskdgfshgfhsgdfjgsfhgsjhfgjsgjhsgfjhsghjsghfsfgshfgjgfhsgfhsgdhfgsdjfgjsdfhsfhgshjfgsjfgsjfgyu';
+
 
 // set your env variable CLOUDINARY_URL or set the following configuration
 cloudinary.config({
@@ -23,9 +25,9 @@ let storedPath, path, img1, img2, img3;
 //================================== creating HTTP handler methods ==================================//
 function processCandidatesData(candidate1, candidate2, candidate3, img1, img2, img3){
     let newStr = '[';
-    let jsonStructure = `{"name": "${candidate1}", "vote": ${0}, "candidateImg": "${img1}"}`;
-    let jsonStructure2 = `,{"name": "${candidate2}", "vote": ${0}, "candidateImg": "${img2}"}`;
-    let jsonStructure3 = `,{"name": "${candidate3}", "vote": ${0}, "candidateImg": "${img3}"}`;
+    let jsonStructure = `{"name": "${candidate1}", "vote": "0", "candidateImg": "${img1}"}`;
+    let jsonStructure2 = `,{"name": "${candidate2}", "vote": "0", "candidateImg": "${img2}"}`;
+    let jsonStructure3 = `,{"name": "${candidate3}", "vote": "0", "candidateImg": "${img3}"}`;
 
     newStr += jsonStructure;
     newStr += jsonStructure2; 
@@ -134,13 +136,28 @@ exports.getElectionResultById = (req, res) => {
 
 // get current vote results
 exports.publishElectionById = (req, res) => {
-        
     election.findByIdAndUpdate(req.body.electionId, {"status": "Ended"}, (err, result) => {
         if(err){
             res.send({msg: `Can't get election results. Please try again in a minute.`});
         }else{
-            console.log(result);
-            res.redirect('/home');
+            election.findOne({_id: req.body.electionId}, (err, docs) => {
+                if(err){
+                    res.send({msg: `Unable to decrypt election vote counts.`});
+                }else{                    
+                    docs.candidates.forEach(element => {                        
+                        let bytes = CryptoJS.AES.decrypt(element.voteCount, secretPhrase);
+                        let decryptedVoteCount = bytes.toString(CryptoJS.enc.Utf8);
+                        element.voteCount = decryptedVoteCount;
+                    });
+
+                    docs.save()
+                        .then(() => {
+                            res.redirect('/home');
+                        }).catch(() => {
+                            res.send({msg: `Object could not be updated.`});
+                        });
+                }            
+            });
         }
     });
 };
@@ -153,15 +170,33 @@ exports.updateResults = (req, res) => {
         res.send({msg: `Unable to update, election.`});
        }else{
         //    res.send({candidates: docs["candidates"]});
-//         let newCount;
         docs.candidates.forEach(element => {
             if(req.query.candidateId == element._id){
-                // console.log("condition fulfilled");
-                newCount = parseInt(JSON.stringify(element.voteCount)) + 1;
-                element.voteCount = newCount;
+                let newCountNumber, cipherText;
+                if(element.voteCount == "0"){
+                    console.log(`Votecount ${element.voteCount}`);
+                   let newCountNumber = parseInt(element.voteCount) + 1;
+                    console.log(`New Count Number: ${newCountNumber}`);
+                    // Encrypt
+                cipherText = CryptoJS.AES.encrypt(newCountNumber.toString(), secretPhrase).toString();
+                }else{
+                    console.log(`Votecount ${element.voteCount}`);
+
+                    let bytes = CryptoJS.AES.decrypt(element.voteCount, secretPhrase);
+                    let decryptedVoteCount = bytes.toString(CryptoJS.enc.Utf8);
+                    console.log(`decryptedVoteCount ${decryptedVoteCount}`);
+
+                    newCountNumber = parseInt(decryptedVoteCount) + 1;
+                    console.log(`New Count Number: ${newCountNumber}`);
+
+                    // Encrypt
+                cipherText = CryptoJS.AES.encrypt(newCountNumber.toString(), secretPhrase).toString();
+                console.log(`cipherText ${cipherText}`);
+                }
+                
+                element.voteCount = cipherText;
                 docs.save()
                     .then(() => {
-                        // console.log("New count for candidate with id: " + JSON.stringify(req.query.candidateId) + " is " + newCount);
                         res.send({msg: `Object updated.`});
                     }).catch(() => {
                         res.send({msg: `Object could not be updated.`});
